@@ -11,16 +11,50 @@ st.write("Input traits and assign them gender-coded ratings (5F = Very Feminine,
 # Input for traits
 num_traits = st.slider("How many traits do you want to enter?", 1, 15, 8)
 
+# Preset traits and scores
+preset_traits = {
+    "Nurturing": -4.5,
+    "Assertive": 4.0,
+    "Empathetic": -4.0,
+    "Stoic": 4.5,
+    "Analytical": 3.5,
+    "Expressive": -3.5,
+    "Protective": 4.0,
+    "Graceful": -4.5,
+    "Competitive": 4.0,
+    "Patient": -3.5,
+    "Independent": 2.5,
+    "Cooperative": -3.5,
+    "Decisive": 3.5,
+    "Sensitive": -4.0,
+    "Risk-taking": 4.0,
+    "Stylish": -3.0,
+    "Dominant": 4.5,
+    "Supportive": -3.5,
+    "Logical": 3.5,
+    "Emotional": -4.5,
+    "Charismatic": 2.5,
+    "Agreeable": -3.0,
+    "Ambitious": 3.5,
+    "Passive": -3.0,
+    "Responsible": 0.5
+}
+
 traits = []
 scores = []
 
 with st.form("trait_form"):
+    st.markdown("### Or click to autofill from preset traits:")
+    selected_preset = st.multiselect("Select traits to preload (you can still edit them):", options=list(preset_traits.keys()))
+    default_traits = selected_preset + ["" for _ in range(num_traits - len(selected_preset))]
+default_scores = [preset_traits[t] for t in selected_preset] + [0.0 for _ in range(num_traits - len(selected_preset))]
+
     for i in range(num_traits):
         col1, col2 = st.columns([2, 1])
         with col1:
-            trait = st.text_input(f"Trait #{i+1}", key=f"trait_{i}")
+            trait = st.text_input(f"Trait #{i+1}", value=default_traits[i] if i < len(default_traits) else "", key=f"trait_{i}")
         with col2:
-            display_val = st.select_slider(f"Score for Trait #{i+1} (5F to 5M)", options=[-5.0, -4.5, -4.0, -3.5, -3.0, -2.5, -2.0, -1.5, -1.0, -0.5, 0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0], format_func=lambda x: f"{abs(x)}{'F' if x < 0 else 'M' if x > 0 else ''}", key=f"score_{i}")
+            display_val = st.select_slider(f"Score for Trait #{i+1} (5F to 5M)", options=[-5.0, -4.5, -4.0, -3.5, -3.0, -2.5, -2.0, -1.5, -1.0, -0.5, 0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0], value=default_scores[i] if i < len(default_scores) else 0.0, format_func=lambda x: f"{abs(int(x))}{'F' if x < 0 else 'M' if x > 0 else ''}", key=f"score_{i}")
             score = display_val  # keep internal representation the same
 
         traits.append(trait)
