@@ -47,7 +47,8 @@ with st.form("trait_form"):
     st.markdown("### Or click to autofill from preset traits:")
     selected_preset = st.multiselect("Select traits to preload (you can still edit them):", options=list(preset_traits.keys()))
     default_traits = selected_preset + ["" for _ in range(num_traits - len(selected_preset))]
-default_scores = [preset_traits[t] for t in selected_preset] + [0.0 for _ in range(num_traits - len(selected_preset))]
+# Reindent this block correctly
+    default_scores = [preset_traits[t] for t in selected_preset] + [0.0 for _ in range(num_traits - len(selected_preset))]
 
     for i in range(num_traits):
         col1, col2 = st.columns([2, 1])
