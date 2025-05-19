@@ -91,11 +91,11 @@ for i in range(num_traits):
 submitted = True
 
 # Filter out empty trait names and match scores
-filtered = [(t, s) for t, s in zip(traits, scores) if t.strip() != ""]
-if filtered:
-    traits, scores = zip(*filtered)
+filtered_pairs = [(t, s) for t, s in zip(traits, scores) if t.strip() != ""]
+if filtered_pairs:
+    filtered_traits, filtered_scores = zip(*filtered_pairs)
 else:
-    traits, scores = [], []
+    filtered_traits, filtered_scores = [], []
 
 if submitted:
     fig, ax = plt.subplots(figsize=(14, 6))
@@ -116,12 +116,12 @@ if submitted:
         ax.text(i, -0.5, f"{abs(i)}{'F' if i < 0 else 'M' if i > 0 else ''}", ha='center', va='center', fontsize=10, fontweight='bold')
 
     # Mean line
-    mean_score = np.mean(scores)
+    mean_score = np.mean(filtered_scores) if filtered_scores else 0
     ax.axvline(mean_score, color='black', linestyle='dotted', linewidth=1)
     ax.text(mean_score, -1.1, f"Mean: {mean_score:.1f}", ha='center', va='top', fontsize=10, fontstyle='italic')
 
     # Plot trait bubbles
-    for idx, (trait, score) in enumerate(zip(traits, scores)):
+    for idx, (trait, score) in enumerate(zip(filtered_traits, filtered_scores)):
         y_offset = 0.35 + 0.08 * ((idx % 3) - 1)
         color = plt.cm.tab10(idx % 10)
         ax.plot(score, 0.4, 'o', color=color, markersize=12, alpha=0.95)
