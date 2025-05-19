@@ -75,7 +75,12 @@ if selected_preset != st.session_state.last_preset:
     for trait in selected_preset:
         if trait not in existing_traits:
             st.session_state.traits_state.insert(-1, trait)
-            score = flattened_traits[f"{cat}: {trait}"]
+            for category, traits in preset_trait_groups.items():
+                if trait in traits:
+                    score = traits[trait]
+                    break
+            else:
+                score = 0.0
             st.session_state.scores_state.insert(-1, score)
     st.session_state.last_preset = selected_preset[:]
 
