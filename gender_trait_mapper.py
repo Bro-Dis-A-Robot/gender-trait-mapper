@@ -9,7 +9,6 @@ st.title("🌀 Gender-Coded Trait Mapper")
 st.write("Input traits and assign them gender-coded ratings (5F = Very Feminine, 0 = Neutral, 5M = Very Masculine).")
 
 # Input for traits
-num_traits = st.slider("How many traits do you want to enter?", 1, 15, 8)
 
 # Preset traits and scores
 preset_trait_groups = {
@@ -67,10 +66,30 @@ for idx, (category, traits) in enumerate(preset_trait_groups.items()):
         selection = st.multiselect(f"{category}", options=list(traits.keys()), key=f"cat_{idx}")
         selected_preset.extend(selection)
 
-default_traits = selected_preset + ["" for _ in range(num_traits - len(selected_preset))]
-default_scores = [flattened_traits[f"{cat}: {t}"] for cat in preset_trait_groups for t in preset_trait_groups[cat] if t in selected_preset] + [0.0 for _ in range(num_traits - len(selected_preset))]
+default_traits = selected_preset[:]
+default_scores = [flattened_traits[f"{cat}: {t}"] for cat in preset_trait_groups for t in preset_trait_groups[cat] if t in selected_preset]
 
-for i in range(num_traits):
+# Dynamically grow form fields until last trait input is blank
+while True:
+    i = len(default_traits)
+    col1, col2 = st.columns([2, 1])
+    with col1:
+        trait = st.text_input(f"Trait #{i+1}", value="", key=f"trait_{i}")
+    with col2:
+        display_val = st.select_slider(
+            f"Score for Trait #{i+1} (5F to 5M)",
+            options=[-5.0, -4.5, -4.0, -3.5, -3.0, -2.5, -2.0, -1.5, -1.0, -0.5, 0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0],
+            value=0.0,
+            format_func=lambda x: f"{abs(x)}{'F' if x < 0 else 'M' if x > 0 else ''}",
+            key=f"score_{i}"
+        )
+        score = display_val
+
+    input_traits.append(trait)
+    input_scores.append(score)
+
+    if trait.strip() == "":
+        break
     col1, col2 = st.columns([2, 1])
     with col1:
         trait = st.text_input(f"Trait #{i+1}", value=default_traits[i] if i < len(default_traits) else "", key=f"trait_{i}")
