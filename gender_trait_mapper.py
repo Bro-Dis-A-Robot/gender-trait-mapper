@@ -1,4 +1,4 @@
-import streamlit as st
+aimport streamlit as st
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import numpy as np
@@ -20,7 +20,7 @@ with st.form("trait_form"):
         with col1:
             trait = st.text_input(f"Trait #{i+1}", key=f"trait_{i}")
         with col2:
-            display_val = st.select_slider(f"Score for Trait #{i+1} (5F to 5M)", options=[-5.0, -4.0, -3.0, -2.0, -1.0, 0.0, 1.0, 2.0, 3.0, 4.0, 5.0], format_func=lambda x: f"{abs(int(x))}{'F' if x < 0 else 'M' if x > 0 else ''}", key=f"score_{i}")
+            display_val = st.select_slider(f"Score for Trait #{i+1} (5F to 5M)", options=[-5.0, -4.5, -4.0, -3.5, -3.0, -2.5, -2.0, -1.5, -1.0, -0.5, 0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0], format_func=lambda x: f"{abs(int(x))}{'F' if x < 0 else 'M' if x > 0 else ''}", key=f"score_{i}")
             score = display_val  # keep internal representation the same
 
         traits.append(trait)
