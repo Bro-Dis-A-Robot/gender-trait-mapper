@@ -43,25 +43,31 @@ preset_traits = {
 traits = []
 scores = []
 
-with st.form("trait_form"):
-    st.markdown("### Or click to autofill from preset traits:")
-    selected_preset = st.multiselect("Select traits to preload (you can still edit them):", options=list(preset_traits.keys()))
-    default_traits = selected_preset + ["" for _ in range(num_traits - len(selected_preset))]
-# Reindent this block correctly
-    default_scores = [preset_traits[t] for t in selected_preset] + [0.0 for _ in range(num_traits - len(selected_preset))]
+st.markdown("### Or click to autofill from preset traits:")
+selected_preset = st.multiselect("Select traits to preload (you can still edit them):", options=list(preset_traits.keys()), key="preset_select")
 
-    for i in range(num_traits):
-        col1, col2 = st.columns([2, 1])
-        with col1:
-            trait = st.text_input(f"Trait #{i+1}", value=default_traits[i] if i < len(default_traits) else "", key=f"trait_{i}")
-        with col2:
-            display_val = st.select_slider(f"Score for Trait #{i+1} (5F to 5M)", options=[-5.0, -4.5, -4.0, -3.5, -3.0, -2.5, -2.0, -1.5, -1.0, -0.5, 0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0], value=default_scores[i] if i < len(default_scores) else 0.0, format_func=lambda x: f"{abs(int(x))}{'F' if x < 0 else 'M' if x > 0 else ''}", key=f"score_{i}")
-            score = display_val  # keep internal representation the same
+default_traits = selected_preset + ["" for _ in range(num_traits - len(selected_preset))]
+default_scores = [preset_traits[t] for t in selected_preset] + [0.0 for _ in range(num_traits - len(selected_preset))]
 
-        traits.append(trait)
-        scores.append(score)
+for i in range(num_traits):
+    col1, col2 = st.columns([2, 1])
+    with col1:
+        trait = st.text_input(f"Trait #{i+1}", value=default_traits[i] if i < len(default_traits) else "", key=f"trait_{i}")
+    with col2:
+        display_val = st.select_slider(
+            f"Score for Trait #{i+1} (5F to 5M)",
+            options=[-5.0, -4.5, -4.0, -3.5, -3.0, -2.5, -2.0, -1.5, -1.0, -0.5, 0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0],
+            value=default_scores[i] if i < len(default_scores) else 0.0,
+            format_func=lambda x: f"{abs(int(x))}{'F' if x < 0 else 'M' if x > 0 else ''}",
+            key=f"score_{i}"
+        )
+        score = display_val
 
-    submitted = st.form_submit_button("Plot Traits")
+    traits.append(trait)
+    scores.append(score)
+
+# Automatically render the plot
+submitted = True
 
 if submitted:
     fig, ax = plt.subplots(figsize=(14, 6))
