@@ -66,6 +66,17 @@ for idx, (category, traits) in enumerate(preset_trait_groups.items()):
         selection = st.multiselect(f"{category}", options=list(traits.keys()), key=f"cat_{idx}")
         selected_preset.extend(selection)
 
+# Initialize session state with selected presets if this is the first run or presets change
+if "last_preset" not in st.session_state:
+    st.session_state.last_preset = []
+
+if selected_preset != st.session_state.last_preset:
+    st.session_state.traits_state = selected_preset[:]
+    st.session_state.scores_state = [flattened_traits[f"{cat}: {t}"] for cat in preset_trait_groups for t in preset_trait_groups[cat] if t in selected_preset]
+    st.session_state.traits_state.append("")
+    st.session_state.scores_state.append(0.0)
+    st.session_state.last_preset = selected_preset[:]
+
 default_traits = selected_preset[:]
 default_scores = [flattened_traits[f"{cat}: {t}"] for cat in preset_trait_groups for t in preset_trait_groups[cat] if t in selected_preset]
 
