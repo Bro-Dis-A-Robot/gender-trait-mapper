@@ -18,26 +18,28 @@ preset_traits = {
     "Empathetic": -4.0,
     "Stoic": 4.5,
     "Analytical": 3.5,
-    "Expressive": -3.5,
     "Protective": 4.0,
     "Graceful": -4.5,
     "Competitive": 4.0,
     "Patient": -3.5,
     "Independent": 2.5,
-    "Cooperative": -3.5,
     "Decisive": 3.5,
-    "Sensitive": -4.0,
     "Risk-taking": 4.0,
     "Stylish": -3.0,
     "Dominant": 4.5,
     "Supportive": -3.5,
     "Logical": 3.5,
-    "Emotional": -4.5,
     "Charismatic": 2.5,
-    "Agreeable": -3.0,
     "Ambitious": 3.5,
-    "Passive": -3.0,
-    "Responsible": 0.5
+    "Responsible": 0.5,
+    "Handy": 3.0,
+    "Outdoorsy": 2.5,
+    "Athletic": 3.5,
+    "Creative": -2.5,
+    "Organized": -1.5,
+    "Adaptable": 0.5,
+    "Masc Presenting": 5.0,
+    "Fem Presenting": -5.0
 }
 
 traits = []
@@ -58,7 +60,7 @@ for i in range(num_traits):
             f"Score for Trait #{i+1} (5F to 5M)",
             options=[-5.0, -4.5, -4.0, -3.5, -3.0, -2.5, -2.0, -1.5, -1.0, -0.5, 0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0],
             value=default_scores[i] if i < len(default_scores) else 0.0,
-            format_func=lambda x: f"{abs(int(x))}{'F' if x < 0 else 'M' if x > 0 else ''}",
+            format_func=lambda x: f"{abs(x)}{'F' if x < 0 else 'M' if x > 0 else ''}",
             key=f"score_{i}"
         )
         score = display_val
