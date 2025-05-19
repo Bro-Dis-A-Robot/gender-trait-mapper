@@ -92,7 +92,10 @@ submitted = True
 
 # Filter out empty trait names and match scores
 filtered = [(t, s) for t, s in zip(traits, scores) if t.strip() != ""]
-traits, scores = zip(*filtered) if filtered else ([], [])
+if filtered:
+    traits, scores = zip(*filtered)
+else:
+    traits, scores = [], []
 
 if submitted:
     fig, ax = plt.subplots(figsize=(14, 6))
