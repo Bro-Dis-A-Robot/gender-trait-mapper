@@ -60,8 +60,12 @@ traits = []
 scores = []
 
 st.markdown("### Or click to autofill from preset traits:")
-selected_preset_labeled = st.multiselect("Select traits to preload (you can still edit them):", options=list(flattened_traits.keys()), key="preset_select")
-selected_preset = [label.split(": ", 1)[1] for label in selected_preset_labeled]
+selected_preset = []
+trait_columns = st.columns(len(preset_trait_groups))
+for idx, (category, traits) in enumerate(preset_trait_groups.items()):
+    with trait_columns[idx]:
+        selection = st.multiselect(f"{category}", options=list(traits.keys()), key=f"cat_{idx}")
+        selected_preset.extend(selection)
 
 default_traits = selected_preset + ["" for _ in range(num_traits - len(selected_preset))]
 default_scores = [flattened_traits[f"{cat}: {t}"] for cat in preset_trait_groups for t in preset_trait_groups[cat] if t in selected_preset] + [0.0 for _ in range(num_traits - len(selected_preset))]
