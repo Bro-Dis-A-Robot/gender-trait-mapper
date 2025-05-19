@@ -71,10 +71,12 @@ if "last_preset" not in st.session_state:
     st.session_state.last_preset = []
 
 if selected_preset != st.session_state.last_preset:
-    st.session_state.traits_state = selected_preset[:]
-    st.session_state.scores_state = [flattened_traits[f"{cat}: {t}"] for cat in preset_trait_groups for t in preset_trait_groups[cat] if t in selected_preset]
-    st.session_state.traits_state.append("")
-    st.session_state.scores_state.append(0.0)
+    existing_traits = set(st.session_state.traits_state)
+    for trait in selected_preset:
+        if trait not in existing_traits:
+            st.session_state.traits_state.insert(-1, trait)
+            score = flattened_traits[f"{cat}: {trait}"]
+            st.session_state.scores_state.insert(-1, score)
     st.session_state.last_preset = selected_preset[:]
 
 default_traits = selected_preset[:]
