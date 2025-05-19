@@ -70,41 +70,32 @@ default_traits = selected_preset[:]
 default_scores = [flattened_traits[f"{cat}: {t}"] for cat in preset_trait_groups for t in preset_trait_groups[cat] if t in selected_preset]
 
 # Dynamically grow form fields until last trait input is blank
-while True:
-    i = len(default_traits)
+if "traits_state" not in st.session_state:
+    st.session_state.traits_state = [""]
+    st.session_state.scores_state = [0.0]
+
+input_traits = []
+input_scores = []
+
+for i in range(len(st.session_state.traits_state)):
     col1, col2 = st.columns([2, 1])
     with col1:
-        trait = st.text_input(f"Trait #{i+1}", value="", key=f"trait_{i}")
+        trait = st.text_input(f"Trait #{i+1}", value=st.session_state.traits_state[i], key=f"trait_{i}")
     with col2:
-        display_val = st.select_slider(
+        score = st.select_slider(
             f"Score for Trait #{i+1} (5F to 5M)",
             options=[-5.0, -4.5, -4.0, -3.5, -3.0, -2.5, -2.0, -1.5, -1.0, -0.5, 0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0],
-            value=0.0,
+            value=st.session_state.scores_state[i],
             format_func=lambda x: f"{abs(x)}{'F' if x < 0 else 'M' if x > 0 else ''}",
             key=f"score_{i}"
         )
-        score = display_val
-
     input_traits.append(trait)
     input_scores.append(score)
 
-    if trait.strip() == "":
-        break
-    col1, col2 = st.columns([2, 1])
-    with col1:
-        trait = st.text_input(f"Trait #{i+1}", value=default_traits[i] if i < len(default_traits) else "", key=f"trait_{i}")
-    with col2:
-        display_val = st.select_slider(
-            f"Score for Trait #{i+1} (5F to 5M)",
-            options=[-5.0, -4.5, -4.0, -3.5, -3.0, -2.5, -2.0, -1.5, -1.0, -0.5, 0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0],
-            value=default_scores[i] if i < len(default_scores) else 0.0,
-            format_func=lambda x: f"{abs(x)}{'F' if x < 0 else 'M' if x > 0 else ''}",
-            key=f"score_{i}"
-        )
-        score = display_val
-
-    input_traits.append(trait)
-    input_scores.append(score)
+# Expand if the last trait is filled in
+if input_traits[-1].strip() != "":
+    st.session_state.traits_state.append("")
+    st.session_state.scores_state.append(0.0)
 
 # Automatically render the plot
 submitted = True
