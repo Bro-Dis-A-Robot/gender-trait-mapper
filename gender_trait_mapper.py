@@ -12,44 +12,59 @@ st.write("Input traits and assign them gender-coded ratings (5F = Very Feminine,
 num_traits = st.slider("How many traits do you want to enter?", 1, 15, 8)
 
 # Preset traits and scores
-preset_traits = {
-    "Nurturing": -4.5,
-    "Assertive": 4.0,
-    "Empathetic": -4.0,
-    "Stoic": 4.5,
-    "Analytical": 3.5,
-    "Protective": 4.0,
-    "Graceful": -4.5,
-    "Competitive": 4.0,
-    "Patient": -3.5,
-    "Independent": 2.5,
-    "Decisive": 3.5,
-    "Risk-taking": 4.0,
-    "Stylish": -3.0,
-    "Dominant": 4.5,
-    "Supportive": -3.5,
-    "Logical": 3.5,
-    "Charismatic": 2.5,
-    "Ambitious": 3.5,
-    "Responsible": 0.5,
-    "Handy": 3.0,
-    "Outdoorsy": 2.5,
-    "Athletic": 3.5,
-    "Creative": -2.5,
-    "Organized": -1.5,
-    "Adaptable": 0.5,
-    "Masc Presenting": 5.0,
-    "Fem Presenting": -5.0
+preset_trait_groups = {
+    "Emotional Traits": {
+        "Nurturing": -4.5,
+        "Empathetic": -4.0,
+        "Stoic": 4.5,
+        "Patient": -3.5,
+        "Supportive": -3.5
+    },
+    "Cognitive Traits": {
+        "Analytical": 3.5,
+        "Decisive": 3.5,
+        "Creative": -2.5,
+        "Adaptable": 0.5,
+        "Responsible": 0.5
+    },
+    "Social Traits": {
+        "Assertive": 4.0,
+        "Charismatic": 2.5,
+        "Ambitious": 3.5,
+        "Dominant": 4.5,
+        "Independent": 2.5
+    },
+    "Physical/Practical Traits": {
+        "Athletic": 3.5,
+        "Handy": 3.0,
+        "Outdoorsy": 2.5,
+        "Organized": -1.5,
+        "Graceful": -4.5
+    },
+    "Style/Presentation": {
+        "Stylish": -3.0,
+        "Garish Style": -1.0,
+        "Reserved Style": 1.0,
+        "Masc Presenting": 5.0,
+        "Fem Presenting": -5.0
+    }
+}
+
+flattened_traits = {
+    f"{category}: {trait}": score
+    for category, traits in preset_trait_groups.items()
+    for trait, score in traits.items()
 }
 
 traits = []
 scores = []
 
 st.markdown("### Or click to autofill from preset traits:")
-selected_preset = st.multiselect("Select traits to preload (you can still edit them):", options=list(preset_traits.keys()), key="preset_select")
+selected_preset_labeled = st.multiselect("Select traits to preload (you can still edit them):", options=list(flattened_traits.keys()), key="preset_select")
+selected_preset = [label.split(": ", 1)[1] for label in selected_preset_labeled]
 
 default_traits = selected_preset + ["" for _ in range(num_traits - len(selected_preset))]
-default_scores = [preset_traits[t] for t in selected_preset] + [0.0 for _ in range(num_traits - len(selected_preset))]
+default_scores = [flattened_traits[f"{cat}: {t}"] for cat in preset_trait_groups for t in preset_trait_groups[cat] if t in selected_preset] + [0.0 for _ in range(num_traits - len(selected_preset))]
 
 for i in range(num_traits):
     col1, col2 = st.columns([2, 1])
