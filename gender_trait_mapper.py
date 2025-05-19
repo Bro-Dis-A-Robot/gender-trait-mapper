@@ -96,7 +96,12 @@ input_traits = []
 input_scores = []
 
 for i in range(len(st.session_state.traits_state)):
-    col1, col2 = st.columns([2, 1])
+    delete_col, col1, col2 = st.columns([0.2, 2, 1])
+    with delete_col:
+        if st.button("✕", key=f"delete_{i}"):
+            st.session_state.traits_state.pop(i)
+            st.session_state.scores_state.pop(i)
+            st.rerun()
     with col1:
         trait = st.text_input(f"Trait #{i+1}", value=st.session_state.traits_state[i], key=f"trait_{i}")
     with col2:
