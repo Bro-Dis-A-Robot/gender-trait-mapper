@@ -56,8 +56,8 @@ flattened_traits = {
     for trait, score in traits.items()
 }
 
-traits = []
-scores = []
+input_traits = []
+input_scores = []
 
 st.markdown("### Or click to autofill from preset traits:")
 selected_preset = []
@@ -84,14 +84,14 @@ for i in range(num_traits):
         )
         score = display_val
 
-    traits.append(trait)
-    scores.append(score)
+    input_traits.append(trait)
+    input_scores.append(score)
 
 # Automatically render the plot
 submitted = True
 
 # Filter out empty trait names and match scores
-filtered_pairs = [(t, s) for t, s in zip(traits, scores) if t.strip() != ""]
+filtered_pairs = [(t, s) for t, s in zip(input_traits, input_scores) if t.strip() != ""]
 if filtered_pairs:
     filtered_traits, filtered_scores = zip(*filtered_pairs)
 else:
