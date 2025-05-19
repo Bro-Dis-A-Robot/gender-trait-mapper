@@ -90,6 +90,10 @@ for i in range(num_traits):
 # Automatically render the plot
 submitted = True
 
+# Filter out empty trait names and match scores
+filtered = [(t, s) for t, s in zip(traits, scores) if t.strip() != ""]
+traits, scores = zip(*filtered) if filtered else ([], [])
+
 if submitted:
     fig, ax = plt.subplots(figsize=(14, 6))
     ax.set_xlim(-5.5, 5.5)
